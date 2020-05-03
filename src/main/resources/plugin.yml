@@ -1,0 +1,12 @@
+name: Home
+version: "1.0"
+api-version: "1.12.2"
+main: net.testusuke.open.Home.Main
+author: testusuke
+website: https://testusuke.net
+description: コンフィグオンリーのホームプラグイン /home help
+commands:
+  home:
+    description: ホームプラグインを使用するための基本的なコマンドです。
+  sethome:
+    description: ホームを設定するためのコマンドです。

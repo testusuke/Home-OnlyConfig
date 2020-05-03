@@ -1,0 +1,8 @@
+prefix: "§e[§dHome§e]§f"
+# Homeに関するお金です
+money:
+  # 登録
+  create: 1000
+  # 移動
+  tp: 100
+mode:
