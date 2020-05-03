@@ -10,21 +10,21 @@ import org.bukkit.entity.Player
 import java.io.File
 import java.io.IOException
 
-class PlayerData (private val player: Player) {
+class PlayerData(private val player: Player) {
     private var config = YamlConfiguration()
-    private lateinit var file:File
+    private lateinit var file: File
 
-    private var locationMap = HashMap<String,Location>()
+    private var locationMap = HashMap<String, Location>()
     private var locationNameList = ArrayList<String>()
 
-    fun loadData(){
+    fun loadData() {
         //  get function
         var i = 0;
-        for(key in config.getConfigurationSection("").getKeys(false)){
+        for (key in config.getConfigurationSection("").getKeys(false)) {
             val worldName = config.getString("${key}.world")
-            val x:Double = config.getDouble("${key}.x")
-            val y:Double = config.getDouble("${key}.y")
-            val z:Double = config.getDouble("${key}.z")
+            val x: Double = config.getDouble("${key}.x")
+            val y: Double = config.getDouble("${key}.y")
+            val z: Double = config.getDouble("${key}.z")
             //  world
             val world: World = Bukkit.getServer().getWorld(worldName) ?: continue
             var location = Location(world, x, y, z)
@@ -34,43 +34,43 @@ class PlayerData (private val player: Player) {
         }
         plugin.logger.info("load homes. amount: $i")
         //  Add LocationNameList
-        for (name in locationMap.keys){
+        for (name in locationMap.keys) {
             locationNameList.add(name)
         }
 
 
     }
 
-    fun loadConfig(){
+    fun loadConfig() {
         try {
             var directory: File = plugin.dataFolder
-            if (!directory.exists())directory.mkdir()
+            if (!directory.exists()) directory.mkdir()
             //var dataDirectory = File(directory,"/data/")
             //if(dataDirectory.exists())dataDirectory.mkdir()
-            file = File(directory,"${player.uniqueId.toString().replace("-","")}.yml")
-            if(!file.exists()){
+            file = File(directory, "${player.uniqueId.toString().replace("-", "")}.yml")
+            if (!file.exists()) {
                 file.createNewFile();
                 config = YamlConfiguration.loadConfiguration(file)
-            }else{
+            } else {
                 config = YamlConfiguration.loadConfiguration(file)
             }
             plugin.logger.info("Loaded HomeData. player: ${player.name}")
-        }catch (e:IOException){
+        } catch (e: IOException) {
             e.printStackTrace()
             plugin.logger.warning("コンフィグのロードに失敗しました。")
         }
     }
 
-    private fun saveData(){
-        try{
+    private fun saveData() {
+        try {
             config.save(file)
-        }catch (e:IOException){
+        } catch (e: IOException) {
             e.printStackTrace()
         }
     }
 
-    private fun setHome(name:String,location: Location){
-        config.set("${name}.world",location.world.name)
+    private fun setHome(name: String, location: Location) {
+        config.set("${name}.world", location.world.name)
         config.set("${name}.x", location.x)
         config.set("${name}.y", location.y)
         config.set("${name}.z", location.z)
@@ -79,24 +79,28 @@ class PlayerData (private val player: Player) {
         saveData()
     }
 
-    private fun removeHome(name:String){
-        config.set(name,null)
+    private fun removeHome(name: String) {
+        config.set(name, null)
         locationNameList.remove(name)
         //  Data
         saveData()
     }
 
-    fun getPlayer(): Player{return player}
+    fun getPlayer(): Player {
+        return player
+    }
 
-    fun getLocationMap(): HashMap<String,Location>{ return locationMap }
+    fun getLocationMap(): HashMap<String, Location> {
+        return locationMap
+    }
 
-    fun getLocation(name: String):Location?{
-        if(!locationMap.containsKey(name))return null
+    fun getLocation(name: String): Location? {
+        if (!locationMap.containsKey(name)) return null
         return locationMap[name]
     }
 
-    fun addLocation(name:String, location: Location){
-        if(locationMap.containsKey(name)){
+    fun addLocation(name: String, location: Location) {
+        if (locationMap.containsKey(name)) {
             return
         }
         locationMap[name] = location
@@ -105,8 +109,8 @@ class PlayerData (private val player: Player) {
         setHome(name, location)
     }
 
-    fun removeLocation(name:String){
-        if(!locationMap.containsKey(name)){
+    fun removeLocation(name: String) {
+        if (!locationMap.containsKey(name)) {
             player.sendMessage("${prefix}§cホームが存在しません")
             return
         }
@@ -115,9 +119,11 @@ class PlayerData (private val player: Player) {
         removeHome(name)
     }
 
-    fun getLocationNameList(): ArrayList<String>{ return locationNameList }
+    fun getLocationNameList(): ArrayList<String> {
+        return locationNameList
+    }
 
-    fun size():Int{
+    fun size(): Int {
         return locationMap.size
     }
 }

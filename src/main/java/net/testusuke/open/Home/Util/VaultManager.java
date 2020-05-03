@@ -13,6 +13,7 @@ import java.util.UUID;
 public class VaultManager {
 
     private final JavaPlugin plugin;
+
     public VaultManager(JavaPlugin plugin) {
         this.plugin = plugin;
         setupEconomy();
@@ -20,14 +21,14 @@ public class VaultManager {
 
     public static Economy economy = null;
 
-    private boolean setupEconomy(){
+    private boolean setupEconomy() {
         plugin.getLogger().info("setupEconomy");
-        if(plugin.getServer().getPluginManager().getPlugin("Vault") == null){
+        if (plugin.getServer().getPluginManager().getPlugin("Vault") == null) {
             plugin.getLogger().warning("Vault plugin is not installed");
             return false;
         }
         RegisteredServiceProvider<Economy> rsp = plugin.getServer().getServicesManager().getRegistration(Economy.class);
-        if(rsp == null){
+        if (rsp == null) {
             plugin.getLogger().warning("Can't get Vault service");
             return false;
         }
@@ -37,19 +38,20 @@ public class VaultManager {
     }
 
     //  所持金確認
-    public double getBalance(UUID uuid){
+    public double getBalance(UUID uuid) {
         return economy.getBalance(Bukkit.getOfflinePlayer(uuid).getPlayer());
     }
+
     //  引き出し
-    public Boolean withdraw(UUID uuid, double money){
+    public Boolean withdraw(UUID uuid, double money) {
         OfflinePlayer p = Bukkit.getOfflinePlayer(uuid);
-        if(p == null){
+        if (p == null) {
             Bukkit.getLogger().info(uuid.toString() + "is nothing");
             return false;
         }
-        EconomyResponse resp = economy.withdrawPlayer(p,money);
-        if(resp.transactionSuccess()){
-            if(p.isOnline()){
+        EconomyResponse resp = economy.withdrawPlayer(p, money);
+        if (resp.transactionSuccess()) {
+            if (p.isOnline()) {
                 p.getPlayer().sendMessage(ChatColor.BLUE + "あなたは" + money + "$支払いました");
             }
             return true;
@@ -58,16 +60,16 @@ public class VaultManager {
     }
 
     //  入金
-    public Boolean deposit(UUID uuid,double money){
+    public Boolean deposit(UUID uuid, double money) {
         OfflinePlayer p = Bukkit.getOfflinePlayer(uuid);
-        if(p == null){
+        if (p == null) {
             Bukkit.getLogger().info(uuid.toString() + "is nothing");
 
             return false;
         }
-        EconomyResponse resp = economy.depositPlayer(p,money);
-        if(resp.transactionSuccess()){
-            if(p.isOnline()){
+        EconomyResponse resp = economy.depositPlayer(p, money);
+        if (resp.transactionSuccess()) {
+            if (p.isOnline()) {
                 p.getPlayer().sendMessage(ChatColor.BLUE + "あなたは" + money + "$受け取りました");
             }
             return true;

@@ -7,26 +7,26 @@ class HomeFunction(private val plugin: Main) {
 
     private var playerDataMap = HashMap<Player, PlayerData>()
 
-    fun loadPlayerData(player: Player){
+    fun loadPlayerData(player: Player) {
         var pd = PlayerData(player)
         pd.loadConfig()
         pd.loadData()
         playerDataMap[player] = pd
     }
 
-    fun removePlayerData(player: Player){
+    fun removePlayerData(player: Player) {
         playerDataMap.remove(player)
     }
 
-    fun getPlayerData(player: Player): PlayerData?{
+    fun getPlayerData(player: Player): PlayerData? {
         return playerDataMap[player]
     }
 
-    fun getPlayerDataMap(): HashMap<Player, PlayerData>?{
+    fun getPlayerDataMap(): HashMap<Player, PlayerData>? {
         return playerDataMap
     }
 
-    fun clearData(){
+    fun clearData() {
         playerDataMap.clear()
     }
 
