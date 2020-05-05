@@ -5,6 +5,7 @@ import net.testusuke.open.Home.Main.Companion.plugin
 import org.apache.commons.io.IOUtils
 import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.OfflinePlayer
 import org.bukkit.World
 import org.bukkit.configuration.file.YamlConfiguration
 import org.json.simple.JSONObject
@@ -24,11 +25,10 @@ class OfflinePlayerData(private val name: String) {
     private var locationNameList = ArrayList<String>()
     private var uuid: String = ""
 
-    fun loadOfflineData(): Boolean {
-        //  Get UUID from WEB API
-        var uuid = getUUIDWithAPI(name)
+    fun loadOfflineData(): Boolean{
+        uuid = getUUID(name)
         if (uuid == "") return false
-        plugin.logger.info("Successfully get uuid with web api. name: $name uuid: $uuid")
+        plugin.logger.info("Successfully get uuid. name: $name uuid: $uuid")
         //  LoadConfig
         var b = loadConfig()
         if (!b) return false
@@ -54,16 +54,9 @@ class OfflinePlayerData(private val name: String) {
         return true
     }
 
-    private fun getUUIDWithAPI(name: String): String {
-        try {
-            var url = "https://api.mojang.com/users/profiles/minecraft/$name"
-            var uuidJson = IOUtils.toString(URL(url))
-            if (uuidJson.isEmpty()) return ""
-            var jsonObject: JSONObject = JSONValue.parseWithException(uuidJson) as JSONObject
-            return jsonObject["id"].toString()
-        } catch (e: Exception) {
-            return ""
-        }
+    private fun getUUID(name: String): String {
+        val offlinePlayer: OfflinePlayer = Bukkit.getOfflinePlayer(name)
+        return offlinePlayer.uniqueId.toString()
     }
 
     private fun loadConfig(): Boolean {

@@ -47,7 +47,7 @@ class PlayerData(private val player: Player) {
             if (!directory.exists()) directory.mkdir()
             //var dataDirectory = File(directory,"/data/")
             //if(dataDirectory.exists())dataDirectory.mkdir()
-            file = File(directory, "${player.uniqueId.toString().replace("-", "")}.yml")
+            file = File(directory, "${player.uniqueId}.yml")
             if (!file.exists()) {
                 file.createNewFile();
                 config = YamlConfiguration.loadConfiguration(file)
