@@ -26,6 +26,7 @@ class HomeCommand(private val plugin: Main) : CommandExecutor {
             sender!!.sendMessage("you can't use console!")
             return false
         }
+
         var player: Player = sender
         if (!sender.hasPermission(permission)) {
             player.sendMessage("${prefix}§cあなたには権限がありません")

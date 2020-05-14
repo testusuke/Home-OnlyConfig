@@ -1,5 +1,5 @@
 name: Home
-version: "1.0"
+version: @version@
 api-version: "1.12.2"
 main: net.testusuke.open.Home.Main
 author: testusuke

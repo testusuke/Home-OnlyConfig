@@ -21,7 +21,7 @@ class OfflinePlayerData(private val name: String) {
     private var config = YamlConfiguration()
     private lateinit var file: File
 
-    private var locationMap = HashMap<String, Location>()
+    private var locationMap = HashMap<String,Location>()
     private var locationNameList = ArrayList<String>()
     private var uuid: String = ""
 

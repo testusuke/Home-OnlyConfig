@@ -37,16 +37,14 @@ class PlayerData(private val player: Player) {
         for (name in locationMap.keys) {
             locationNameList.add(name)
         }
-
-
     }
 
     fun loadConfig() {
         try {
             var directory: File = plugin.dataFolder
             if (!directory.exists()) directory.mkdir()
-            //var dataDirectory = File(directory,"/data/")
-            //if(dataDirectory.exists())dataDirectory.mkdir()
+            var dataDirectory = File(directory,"/data/")
+            if(!dataDirectory.exists())dataDirectory.mkdir()
             file = File(directory, "${player.uniqueId}.yml")
             if (!file.exists()) {
                 file.createNewFile();
