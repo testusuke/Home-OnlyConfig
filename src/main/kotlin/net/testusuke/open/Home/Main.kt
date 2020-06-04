@@ -37,6 +37,8 @@ class Main : JavaPlugin() {
         //  Command
         getCommand("home").executor = HomeCommand(this)
         getCommand("sethome").executor = HomeSetCommand(this)
+        //getCommand("pghome").executor = HomeCommand(this)
+        //getCommand("pgsethome").executor = HomeSetCommand(this)
         this.saveDefaultConfig()
         loadConfig()
         //  Class

@@ -1,6 +1,5 @@
 name: Home
-version: @version@
-api-version: "1.12.2"
+version: 1.0.1
 main: net.testusuke.open.Home.Main
 author: testusuke
 website: https://testusuke.net

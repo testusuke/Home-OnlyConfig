@@ -8,10 +8,7 @@ version '1.0.1'
 repositories {
     mavenCentral()
     maven {
-        url "https://hub.spigotmc.org/nexus/content/repositories/snapshots"
-    }
-    maven {
-        url "https://oss.sonatype.org/content/repositories/snapshots"
+        url = uri("https://papermc.io/repo/repository/maven-public/")
     }
     maven {
         url 'https://jitpack.io'
@@ -20,7 +17,7 @@ repositories {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    implementation "org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT"
+    implementation("com.destroystokyo.paper:paper-api:1.12.2-R0.1-SNAPSHOT")
     compile group: 'commons-io', name: 'commons-io', version: '2.4'
     compileOnly "com.github.MilkBowl:VaultAPI:1.7"
 }
