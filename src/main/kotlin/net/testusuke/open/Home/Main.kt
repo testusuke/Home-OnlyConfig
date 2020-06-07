@@ -5,21 +5,34 @@ import net.testusuke.open.Home.Command.HomeSetCommand
 import net.testusuke.open.Home.Data.HomeAdminFunction
 import net.testusuke.open.Home.Data.HomeFunction
 import net.testusuke.open.Home.Event.EventListener
-import net.testusuke.open.Home.Util.VaultManager
+import org.bukkit.Material
+import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 
 class Main : JavaPlugin() {
     companion object {
-        lateinit var plugin: JavaPlugin
+        lateinit var plugin: Main
         var prefix: String = "§e[§dHome]§f"
         var mode: Boolean = false
-        var version = "1.0"
+        var version = "1.0.3"
         var author = "testusuke"
         var pluginName = "Home"
 
         //  Class
         lateinit var homeFunction: HomeFunction
         lateinit var homeAdminFunction: HomeAdminFunction
+    }
+
+    //  Item
+    val registerItemStack:ItemStack by lazy {
+        val itemStack = ItemStack(Material.MAGMA_CREAM)
+        val itemMeta = itemStack.itemMeta
+        itemMeta.displayName = "§aHome登録用アイテム"
+        val list = ArrayList<String>()
+        list.add("§6手に持って/pgsethome [name]")
+        itemMeta.lore = list
+        itemStack.itemMeta = itemMeta
+        itemStack
     }
 
     var homeCreateVault: Int = 0
@@ -35,16 +48,15 @@ class Main : JavaPlugin() {
         //  Event
         server.pluginManager.registerEvents(EventListener, this)
         //  Command
-        getCommand("home").executor = HomeCommand(this)
-        getCommand("sethome").executor = HomeSetCommand(this)
-        //getCommand("pghome").executor = HomeCommand(this)
-        //getCommand("pgsethome").executor = HomeSetCommand(this)
+        //getCommand("home").executor = HomeCommand(this)
+        //getCommand("sethome").executor = HomeSetCommand(this)
+        getCommand("pghome").executor = HomeCommand(this)
+        getCommand("pgsethome").executor = HomeSetCommand(this)
         this.saveDefaultConfig()
         loadConfig()
         //  Class
         homeFunction = HomeFunction(this)
         homeAdminFunction = HomeAdminFunction(this)
-        VaultManager(this)
     }
 
     override fun onDisable() {
@@ -80,3 +92,4 @@ class Main : JavaPlugin() {
         homeAdminFunction.clearData()
     }
 }
+

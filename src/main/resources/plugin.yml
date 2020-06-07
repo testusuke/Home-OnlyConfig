@@ -1,11 +1,11 @@
 name: Home
-version: 1.0.1
+version: 1.0.2
 main: net.testusuke.open.Home.Main
 author: testusuke
 website: https://testusuke.net
 description: コンフィグオンリーのホームプラグイン /home help
 commands:
-  home:
+  pghome:
     description: ホームプラグインを使用するための基本的なコマンドです。
-  sethome:
+  pgsethome:
     description: ホームを設定するためのコマンドです。

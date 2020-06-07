@@ -1,6 +1,5 @@
 package net.testusuke.open.Home.Command
 
-import net.testusuke.open.Home.Data.HomeAdminFunction
 import net.testusuke.open.Home.Data.OfflinePlayerData
 import net.testusuke.open.Home.Main
 import net.testusuke.open.Home.Main.Companion.homeFunction
@@ -9,7 +8,6 @@ import net.testusuke.open.Home.Main.Companion.prefix
 import net.testusuke.open.Home.Main.Companion.version
 import net.testusuke.open.Home.Data.PlayerData
 import net.testusuke.open.Home.Main.Companion.homeAdminFunction
-import net.testusuke.open.Home.Util.VaultManager
 import org.bukkit.Location
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -52,60 +50,11 @@ class HomeCommand(private val plugin: Main) : CommandExecutor {
                     sendHomeList(player)
                     return true
                 }
-
-                //  Pex
-                if (!hasAdmin(player)) {
-                    return false
-                }
-                var name = args[1]
-                var opd: OfflinePlayerData? = homeAdminFunction.getOfflinePlayerData(name)
-                if (opd == null) {
-                    player.sendMessage("${prefix}§6データがロードされていないので、データをロードします")
-                    opd = homeAdminFunction.getOfflinePlayerData(name)
-                    if (opd == null) {
-                        player.sendMessage("${prefix}§cエラーです。")
-                        return false
-                    }
-                }
-                var list = opd.getLocationNameList()
-                player.sendMessage("${prefix}§a${name}のホームリストを表示します。")
-                for (home in list) {
-                    player.sendMessage("- $home")
-                }
             }
             "remove" -> {
                 if (!mode) {
                     sendDisable(player)
                     return false
-                }
-
-                //  Admin
-                if (args.size >= 3) {
-                    //  Pex
-                    if (!hasAdmin(player)) {
-                        sendNotHasPex(player)
-                        return false
-                    }
-                    var name = args[1]
-                    var home = args[2]
-                    var opd: OfflinePlayerData? = homeAdminFunction.getOfflinePlayerData(name)
-                    if (opd == null) {
-                        player.sendMessage("${prefix}§6データがロードされていないので、データをロードします")
-                        opd = homeAdminFunction.getOfflinePlayerData(name)
-                        if (opd == null) {
-                            player.sendMessage("${prefix}§cエラーです。")
-                            return false
-                        }
-                    }
-                    var list = opd.getLocationNameList()
-                    if (list.contains(home)) {
-                        opd.removeLocation(home)
-                        player.sendMessage("${prefix}§6ホームを削除します。")
-                        return true
-                    } else {
-                        player.sendMessage("${prefix}§cホームが存在しません。")
-                    }
-                    return true
                 }
                 //  General
                 if (args.size < 2) {
@@ -123,13 +72,13 @@ class HomeCommand(private val plugin: Main) : CommandExecutor {
                     }
                 }
                 var list: ArrayList<String> = pd.getLocationNameList()
-                if (list.contains(arg1)) {
+                return if (list.contains(arg1)) {
                     pd.removeLocation(arg1)
                     player.sendMessage("${prefix}§6ホームを削除します。")
-                    return true
+                    true
                 } else {
                     player.sendMessage("${prefix}§cホームが存在しません。")
-                    return false
+                    false
                 }
             }
             "reload" -> {
@@ -171,60 +120,14 @@ class HomeCommand(private val plugin: Main) : CommandExecutor {
                 return true
             }
 
-            "load" -> {
-                if (!mode) {
-                    sendDisable(player)
-                    return false
-                }
+            "get" -> {
                 if (!hasAdmin(player)) {
                     sendNotHasPex(player)
                     return false
                 }
-                if (args.size != 2) {
-                    player.sendMessage("${prefix}§c使用方法が誤っています。/home help")
-                    return false
-                }
-                var arg1 = args[1]
-                var opd: OfflinePlayerData? = homeAdminFunction.getOfflinePlayerData(arg1)
-                if (opd == null) {
-                    homeAdminFunction.loadPlayerData(arg1, player)
-                } else {
-                    homeAdminFunction.removeOfflinePlayerData(arg1)
-                    homeAdminFunction.loadPlayerData(arg1, player)
-                }
-            }
+                player.sendMessage("${prefix}§a登録用アイテムを付与します")
+                player.inventory.addItem(plugin.registerItemStack)
 
-            "tp" -> {
-                if (!mode) {
-                    sendDisable(player)
-                    return false
-                }
-                if (!hasAdmin(player)) {
-                    sendNotHasPex(player)
-                    return false
-                }
-                if (args.size != 3) {
-                    player.sendMessage("${prefix}§c使用方法が誤っています。/home help")
-                    return false
-                }
-                var name = args[1]
-                var home = args[2]
-                var opd: OfflinePlayerData? = homeAdminFunction.getOfflinePlayerData(name)
-                if (opd == null) {
-                    player.sendMessage("${prefix}§6データがロードされていないので、データをロードします")
-                    opd = homeAdminFunction.getOfflinePlayerData(name)
-                    if (opd == null) {
-                        player.sendMessage("${prefix}§cエラーです。")
-                        return false
-                    }
-                }
-                if (!opd.getLocationNameList().contains(home)) {
-                    player.sendMessage("${prefix}§cホームが存在しません。/home list $name")
-                    return false
-                }
-                var location: Location? = opd.getLocation(home)
-                player.teleport(location)
-                player.sendMessage("${prefix}§aテレポートします。")
             }
 
             else -> {
@@ -300,15 +203,6 @@ class HomeCommand(private val plugin: Main) : CommandExecutor {
         if (location == null) {
             player.sendMessage("${prefix}§cホームが存在しません。/home help")
             return
-        }
-        //  Vault
-        var vault = VaultManager.economy.getBalance(player).toInt()
-        if (plugin.homeTPVault != 0) {
-            if (plugin.homeTPVault > vault) {
-                player.sendMessage("${prefix}§cお金が不足しています。必要な金額: ${plugin.homeTPVault}")
-                return
-            }
-            VaultManager.economy.withdrawPlayer(player, plugin.homeTPVault.toDouble())
         }
         player.teleport(location)
         player.sendMessage("${prefix}§aテレポートします。")
