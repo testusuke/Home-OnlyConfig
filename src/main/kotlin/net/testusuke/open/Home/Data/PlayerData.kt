@@ -19,7 +19,7 @@ class PlayerData(private val player: Player) {
 
     fun loadData() {
         //  get function
-        var i = 0;
+        var i = 0
         for (key in config.getConfigurationSection("").getKeys(false)) {
             val worldName = config.getString("${key}.world")
             val x: Double = config.getDouble("${key}.x")
